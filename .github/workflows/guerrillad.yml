@@ -1,0 +1,66 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build guerrillad
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Clone go-guerrilla repository
+        uses: actions/checkout@v3
+        with:
+          repository: flashmob/go-guerrilla
+          path: src/go-guerrilla
+        
+      - name: Set up Go tooling
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.13'
+          
+      - name: Ensure go-guerrilla dependencies
+        env:
+          GOPATH: ${{ github.workspace }}
+        run: |
+          mkdir bin
+          curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+          cd src/go-guerrilla
+          ../../bin/dep ensure -v
+
+      - name: Setup tmate session
+        env:
+          GOPATH: ${{ github.workspace }}
+        uses: mxschmitt/action-tmate@v3
+
+      - name: Build guerrillad
+        env:
+          GOPATH: ${{ github.workspace }}
+        run: |
+          cd src/go-guerrilla
+          make ROOT="go-guerrilla" LD_FLAGS="-X 'go-guerrilla/vendor/github.com/flashmob/go-guerrilla.Version=$(git describe --tags $(git rev-parse HEAD) 2> /dev/null || echo "$(git rev-parse HEAD)")' -X 'go-guerrilla/vendor/github.com/flashmob/go-guerrilla.Commit=$(git rev-parse HEAD)' -X 'go-guerrilla/vendor/github.com/flashmob/go-guerrilla.BuildTime=$(LANG=en_US date +"%F_%T_%z")'" guerrillad
+
+      - name: Test guerrillad
+        env:
+          GOPATH: ${{ github.workspace }}
+        run: |
+          cd src/go-guerrilla
+          make ROOT="$(pwd)" test
+
+      - name: Package guerrillad
+        uses: actions/upload-artifact@v3
+        with:
+          name: guerrillad
+          path: src/go-guerrilla/guerrillad
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
