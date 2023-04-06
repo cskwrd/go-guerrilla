@@ -37,10 +37,10 @@ jobs:
           cd src/go-guerrilla
           ../../bin/dep ensure -v
 
-#       - name: Setup tmate session
-#         env:
-#           GOPATH: ${{ github.workspace }}
-#         uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        env:
+          GOPATH: ${{ github.workspace }}
+        uses: mxschmitt/action-tmate@v3
 
       - name: Build guerrillad
         env:
