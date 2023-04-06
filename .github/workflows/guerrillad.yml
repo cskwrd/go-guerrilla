@@ -39,24 +39,24 @@ jobs:
           cd src/go-guerrilla
           ../../bin/dep ensure -v
 
-      - name: Setup tmate session
-        env:
-          GOPATH: ${{ github.workspace }}
-        uses: mxschmitt/action-tmate@v3
+#       - name: Setup tmate session
+#         env:
+#           GOPATH: ${{ github.workspace }}
+#         uses: mxschmitt/action-tmate@v3
 
       - name: Build guerrillad
         env:
           GOPATH: ${{ github.workspace }}
         run: |
           cd src/go-guerrilla
-          make ROOT="go-guerrilla" LD_FLAGS="-X 'go-guerrilla/vendor/github.com/flashmob/go-guerrilla.Version=$(git describe --tags $(git rev-parse HEAD) 2> /dev/null || echo "$(git rev-parse HEAD)")' -X 'go-guerrilla/vendor/github.com/flashmob/go-guerrilla.Commit=$(git rev-parse HEAD)' -X 'go-guerrilla/vendor/github.com/flashmob/go-guerrilla.BuildTime=$(LANG=en_US date +"%F_%T_%z")'" guerrillad
+          make ROOT="$(basename "$PWD")" LD_FLAGS="-X '$(basename "$PWD")/vendor/github.com/flashmob/go-guerrilla.Version=$(git describe --tags $(git rev-parse HEAD) 2> /dev/null || echo "$(git rev-parse HEAD)")' -X '$(basename "$PWD")/vendor/github.com/flashmob/go-guerrilla.Commit=$(git rev-parse HEAD)' -X '$(basename "$PWD")/vendor/github.com/flashmob/go-guerrilla.BuildTime=$(LANG=en_US date +"%F_%T_%z")'" guerrillad
 
       - name: Test guerrillad
         env:
           GOPATH: ${{ github.workspace }}
         run: |
           cd src/go-guerrilla
-          make ROOT="$(pwd)" test
+          make ROOT="$(basename "$PWD")" LD_FLAGS="-X '$(basename "$PWD")/vendor/github.com/flashmob/go-guerrilla.Version=$(git describe --tags $(git rev-parse HEAD) 2> /dev/null || echo "$(git rev-parse HEAD)")' -X '$(basename "$PWD")/vendor/github.com/flashmob/go-guerrilla.Commit=$(git rev-parse HEAD)' -X '$(basename "$PWD")/vendor/github.com/flashmob/go-guerrilla.BuildTime=$(LANG=en_US date +"%F_%T_%z")'" test
 
       - name: Package guerrillad
         uses: actions/upload-artifact@v3
