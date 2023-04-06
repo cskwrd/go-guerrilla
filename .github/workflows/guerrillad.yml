@@ -38,8 +38,6 @@ jobs:
           ../../bin/dep ensure -v
 
       - name: Setup tmate session
-        env:
-          GOPATH: ${{ github.workspace }}
         uses: mxschmitt/action-tmate@v3
 
       - name: Build guerrillad
