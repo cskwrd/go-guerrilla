@@ -1,7 +1,7 @@
 package iconv
 
 import (
-	"github.com/flashmob/go-guerrilla/mail"
+	"github.com/cskwrd/go-guerrilla/mail"
 	"strings"
 	"testing"
 )

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flashmob/go-guerrilla/backends"
-	"github.com/flashmob/go-guerrilla/log"
+	"github.com/cskwrd/go-guerrilla/backends"
+	"github.com/cskwrd/go-guerrilla/log"
 )
 
 // AppConfig is the holder of the configuration of the app
