@@ -16,9 +16,6 @@ help:
 clean:
 	rm -f guerrillad
 
-vendor:
-	dep ensure
-
 guerrillad:
 	$(GO_VARS) $(GO) build -o="guerrillad" -ldflags="$(LD_FLAGS)" $(ROOT)/cmd/guerrillad
 

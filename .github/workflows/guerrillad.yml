@@ -28,14 +28,14 @@ jobs:
         with:
           go-version: '1.13'
           
-      - name: Ensure go-guerrilla dependencies
-        env:
-          GOPATH: ${{ github.workspace }}
-        run: |
-          mkdir bin
-          curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-          cd src/go-guerrilla
-          ../../bin/dep ensure -v
+      # - name: Ensure go-guerrilla dependencies
+      #   env:
+      #     GOPATH: ${{ github.workspace }}
+      #   run: |
+      #     mkdir bin
+      #     curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+      #     cd src/go-guerrilla
+      #     ../../bin/dep ensure -v
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
